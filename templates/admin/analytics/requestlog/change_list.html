@@ -1,0 +1,352 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/requestlog_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+    <!-- Key Metrics -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">{% trans "Total Requests" %}</div>
+            <div class="stat-value">{{ total_requests_7days }}</div>
+            <div class="stat-trend trend-up">
+                <span>↑ 12%</span>
+                <span>{% trans "vs last week" %}</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">{% trans "Average Response Time" %}</div>
+            <div class="stat-value">{{ avg_response_time|floatformat:2 }}ms</div>
+            <div class="stat-trend {% if avg_response_time < 200 %}trend-up{% else %}trend-down{% endif %}">
+                <span>{{ avg_response_time|floatformat:0 }}ms</span>
+                <span>{% trans "threshold:" %} 200ms</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">{% trans "Success Rate" %}</div>
+            <div class="stat-value">{{ success_rate }}%</div>
+            <div class="stat-trend {% if success_rate > 95 %}trend-up{% else %}trend-down{% endif %}">
+                <span>{% trans "Target:" %} 95%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-header">
+                <div class="metric-icon">⚡</div>
+                <h3>{% trans "Performance" %}</h3>
+            </div>
+            <div style="color: #1D1D1D; font-weight: 500;">
+                <p>{% trans "Database Query Time" %}: {{ performance_stats.avg_db_time|floatformat:2 }}ms</p>
+                <p>{% trans "High Response" %}: {{ performance_stats.peak_response_time|floatformat:2 }}ms</p>
+                <p>{% trans "Memory Usage" %}: {{ performance_stats.avg_memory|filesizeformat }}</p>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-header">
+                <div class="metric-icon">🔒</div>
+                <h3>{% trans "Security" %}</h3>
+            </div>
+            <div style="color: #1D1D1D; font-weight: 500;">
+                <p>{% trans "Suspicious Requests" %}: 
+                    <span class="status-badge {% if security_stats.suspicious_requests > 50 %}status-error{% else %}status-success{% endif %}">
+                        {{ security_stats.suspicious_requests }}
+                    </span>
+                </p>
+                <p>{% trans "Auth Failures" %}: 
+                    <span class="status-badge {% if security_stats.auth_failures > 20 %}status-error{% else %}status-success{% endif %}">
+                        {{ security_stats.auth_failures }}
+                    </span>
+                </p>
+                <p>{% trans "Throttled" %}: 
+                    <span class="status-badge {% if security_stats.throttled_requests > 100 %}status-error{% else %}status-success{% endif %}">
+                        {{ security_stats.throttled_requests }}
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="metrics-grid">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">{% trans "Request Volume Trend" %}</h3>
+            </div>
+            <canvas id="requestVolumeChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">{% trans "Response Time Trend" %}</h3>
+            </div>
+            <canvas id="responseTimeChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Distribution Charts -->
+    <div class="metrics-grid">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">{% trans "Browser Distribution" %}</h3>
+            </div>
+            <canvas id="browserChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">{% trans "Device Distribution" %}</h3>
+            </div>
+            <canvas id="deviceChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Endpoints Grid -->
+    <div class="endpoints-section">
+        <div class="section-header">
+            <h3 class="section-title">{% trans "Top Endpoints" %}</h3>
+        </div>
+        <div class="endpoints-grid">
+            {% for endpoint in top_endpoints %}
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <div class="endpoint-method">
+                        {% if 'GET' in endpoint.endpoint %}
+                        <span class="method-badge method-get">GET</span>
+                        {% elif 'POST' in endpoint.endpoint %}
+                        <span class="method-badge method-post">POST</span>
+                        {% elif 'PUT' in endpoint.endpoint %}
+                        <span class="method-badge method-put">PUT</span>
+                        {% elif 'DELETE' in endpoint.endpoint %}
+                        <span class="method-badge method-delete">DELETE</span>
+                        {% else %}
+                        <span class="method-badge">{% trans "OTHER" %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="endpoint-status">
+                        <span class="status-badge {% if endpoint.error_rate > 5 %}status-error{% elif endpoint.error_rate > 2 %}status-warning{% else %}status-success{% endif %}">
+                            {% if endpoint.error_rate > 5 %}{% trans "Critical" %}{% elif endpoint.error_rate > 2 %}{% trans "Warning" %}{% else %}{% trans "Healthy" %}{% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="endpoint-path">{{ endpoint.endpoint }}</div>
+                <div class="endpoint-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">{% trans "Requests" %}</div>
+                        <div class="stat-value">{{ endpoint.count }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">{% trans "Avg Response" %}</div>
+                        <div class="stat-value {% if endpoint.avg_response_time > 200 %}text-warning{% endif %}">
+                            {{ endpoint.avg_response_time|floatformat:2 }}ms
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">{% trans "Error Rate" %}</div>
+                        <div class="stat-value {% if endpoint.error_rate > 5 %}text-error{% elif endpoint.error_rate > 2 %}text-warning{% endif %}">
+                            {{ endpoint.error_rate|floatformat:1 }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Original Change List Content -->
+    <div class="changelist-container">
+        {{ block.super }}
+    </div>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default Chart.js options
+    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif';
+    Chart.defaults.color = '#5f6368';
+    
+    // Parse data from Django context
+    const days = {{ days_json|safe }};
+    const requestCounts = {{ requests_json|safe }};
+    const avgResponseTimes = {{ response_times_json|safe }};
+    const methodStats = {{ method_stats_json|safe }};
+    const statusCodeStats = {{ status_code_stats_json|safe }};
+    const browserStats = {{ browser_stats_json|safe }};
+    const deviceStats = {{ device_stats_json|safe }};
+
+    console.log('Chart Data:', { days, requestCounts, avgResponseTimes });
+
+    // Request Volume Chart
+    const requestVolumeChart = new Chart(
+        document.getElementById('requestVolumeChart').getContext('2d'),
+        {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: '{% trans "Total Requests" %}',
+                    data: requestCounts,
+                    borderColor: '#1a73e8',
+                    backgroundColor: 'rgba(26, 115, 232, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: '{% trans "Daily Request Volume" %}'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false,
+                            color: '#e8eaed'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+    // Response Time Chart
+    const responseTimeChart = new Chart(
+        document.getElementById('responseTimeChart').getContext('2d'),
+        {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: '{% trans "Average Response Time (ms)" %}',
+                    data: avgResponseTimes,
+                    borderColor: '#0f9d58',
+                    backgroundColor: 'rgba(15, 157, 88, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: '{% trans "Response Time Trend" %}'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false,
+                            color: '#e8eaed'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+    // Browser Distribution Chart
+    const browserChart = new Chart(
+        document.getElementById('browserChart').getContext('2d'),
+        {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(browserStats),
+                datasets: [{
+                    data: Object.values(browserStats),
+                    backgroundColor: [
+                        '#1a73e8',
+                        '#0f9d58',
+                        '#f4b400',
+                        '#d93025',
+                        '#9334e6'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        }
+    );
+
+    // Device Distribution Chart
+    const deviceChart = new Chart(
+        document.getElementById('deviceChart').getContext('2d'),
+        {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(deviceStats),
+                datasets: [{
+                    data: Object.values(deviceStats),
+                    backgroundColor: [
+                        '#1a73e8',
+                        '#0f9d58',
+                        '#f4b400'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        }
+    );
+
+    // Set height for chart containers
+    document.querySelectorAll('.chart-container').forEach(container => {
+        container.style.height = '300px';
+    });
+});
+</script>
+{% endblock %}

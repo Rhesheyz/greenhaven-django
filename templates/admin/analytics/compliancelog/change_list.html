@@ -1,0 +1,234 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/complianc_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="compliance-dashboard">
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="card high-risk">
+            <div class="card-icon">⚠️</div>
+            <div class="card-content">
+                <h3>{% trans "High Risk Actions" %}</h3>
+                <p>{{ high_risk_count }}</p>
+            </div>
+        </div>
+        <div class="card cross-border">
+            <div class="card-icon">🌍</div>
+            <div class="card-content">
+                <h3>{% trans "Cross-Border Transfers" %}</h3>
+                <p>{{ cross_border_count }}</p>
+            </div>
+        </div>
+        <div class="card expired">
+            <div class="card-icon">⏰</div>
+            <div class="card-content">
+                <h3>{% trans "Expired Records" %}</h3>
+                <p>{{ expired_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Charts Section -->
+    <div class="charts-section">
+        <!-- Primary Charts Row -->
+        <div class="charts-row primary">
+            <!-- Daily Activity -->
+            <div class="chart-container large">
+                <div class="chart-header">
+                    <h3>{% trans "Daily Compliance Activity" %}</h3>
+                    <span class="chart-subtitle">{% trans "30-day trend analysis" %}</span>
+                </div>
+                <canvas id="dailyActivityChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Secondary Charts Row -->
+        <div class="charts-row">
+            <!-- Action Types Distribution -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>{% trans "Action Distribution" %}</h3>
+                    <span class="chart-subtitle">{% trans "By type" %}</span>
+                </div>
+                <canvas id="actionTypesChart"></canvas>
+            </div>
+            
+            <!-- Data Categories -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>{% trans "Data Categories" %}</h3>
+                    <span class="chart-subtitle">{% trans "Distribution" %}</span>
+                </div>
+                <canvas id="dataCategoriesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Tertiary Charts Row -->
+        <div class="charts-row">
+            <!-- Sensitivity Levels -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>{% trans "Risk Analysis" %}</h3>
+                    <span class="chart-subtitle">{% trans "Sensitivity level" %}</span>
+                </div>
+                <canvas id="sensitivityChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Original Change List -->
+{{ block.super }}
+
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    Chart.defaults.font.family = "'Inter', 'Helvetica', 'Arial', sans-serif";
+    Chart.defaults.font.size = 13;
+    
+    // Daily Activity Chart
+    new Chart(document.getElementById('dailyActivityChart'), {
+        type: 'line',
+        data: {
+            labels: {{ daily_activity_json.labels|safe }},
+            datasets: [{
+                label: '{% trans "Compliance Actions" %}',
+                data: {{ daily_activity_json.data|safe }},
+                borderColor: '#3B82F6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Action Types Chart
+    new Chart(document.getElementById('actionTypesChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ access_stats_json.labels|safe }},
+            datasets: [{
+                data: {{ access_stats_json.data|safe }},
+                backgroundColor: [
+                    '#3B82F6', '#10B981', '#F59E0B', '#EF4444',
+                    '#8B5CF6', '#EC4899', '#6366F1'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 20
+                    }
+                }
+            },
+            cutout: '60%'
+        }
+    });
+
+    // Data Categories Chart
+    new Chart(document.getElementById('dataCategoriesChart'), {
+        type: 'pie',
+        data: {
+            labels: {{ data_categories_json.labels|safe }},
+            datasets: [{
+                data: {{ data_categories_json.data|safe }},
+                backgroundColor: [
+                    '#3B82F6', '#10B981', '#F59E0B', '#EF4444',
+                    '#8B5CF6', '#EC4899', '#6366F1'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        padding: 20
+                    }
+                }
+            }
+        }
+    });
+
+    // Sensitivity Levels Chart
+    new Chart(document.getElementById('sensitivityChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ sensitivity_stats_json.labels|safe }},
+            datasets: [{
+                label: '{% trans "Actions" %}',
+                data: {{ sensitivity_stats_json.data|safe }},
+                backgroundColor: [
+                    '#10B981', '#F59E0B', '#EF4444', '#7C3AED',
+                    '#8B5CF6', '#EC4899', '#6366F1'
+                ],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %} 

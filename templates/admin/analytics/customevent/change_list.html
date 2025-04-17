@@ -1,0 +1,204 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/customevent_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="analytics-dashboard">
+    <div class="dashboard-grid">
+        <!-- Event Activity Timeline -->
+        <div class="chart-container timeline-chart">
+            <div class="chart-header">
+                <h3 class="chart-title">{% trans "Event Activity (Last 30 Days)" %}</h3>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="eventTimeline"></canvas>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <!-- Category Distribution -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">{% trans "Event Categories" %}</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- User Type Distribution -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">{% trans "User Types" %}</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="userTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Events -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">{% trans "Top Events" %}</h3>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="eventChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Original Change List Content -->
+    <div class="changelist-container">
+        {{ block.super }}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chartColors = {
+        blue: '#3498db',
+        green: '#2ecc71',
+        red: '#e74c3c',
+        yellow: '#f1c40f',
+        purple: '#9b59b6',
+        turquoise: '#1abc9c',
+        orange: '#e67e22',
+        navy: '#34495e',
+        pink: '#ff6b6b',
+        gray: '#7f8c8d',
+        lightBlue: '#34a2db',
+    };
+
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true
+                }
+            }
+        }
+    };
+
+    // Event Timeline Chart
+    new Chart(document.getElementById('eventTimeline'), {
+        type: 'line',
+        data: {
+            labels: {{ daily_events_json.labels|safe }},
+            datasets: [{
+                label: '{% trans "Events" %}',
+                data: {{ daily_events_json.data|safe }},
+                borderColor: chartColors.blue,
+                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            ...commonOptions,
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+    // Category Distribution Chart
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'pie',
+        data: {
+            labels: {{ category_stats_json.labels|safe }},
+            datasets: [{
+                data: {{ category_stats_json.data|safe }},
+                backgroundColor: Object.values(chartColors)
+            }]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+
+    // Top Events Chart
+    new Chart(document.getElementById('eventChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ event_stats_json.labels|safe }},
+            datasets: [{
+                label: '{% trans "Event Count" %}',
+                data: {{ event_stats_json.data|safe }},
+                backgroundColor: Object.values(chartColors).slice(0, {{ event_stats_json.data|length }}),
+                borderRadius: 4
+            }]
+        },
+        options: {
+            ...commonOptions,
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // User Type Distribution Chart
+    new Chart(document.getElementById('userTypeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ user_type_stats_json.labels|safe }},
+            datasets: [{
+                data: {{ user_type_stats_json.data|safe }},
+                backgroundColor: [chartColors.green, chartColors.red, chartColors.yellow],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            ...commonOptions,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %} 

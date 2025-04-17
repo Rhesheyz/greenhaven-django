@@ -1,0 +1,119 @@
+import spacy
+import re
+import nltk
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lsa import LsaSummarizer
+from collections import Counter
+from bs4 import BeautifulSoup
+
+# Pastikan nltk 'punkt' sudah terinstal dengan benar
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt")
+
+# Load model NLP (gunakan model universal untuk dukungan bahasa yang luas)
+nlp = spacy.load("xx_ent_wiki_sm")
+
+def extract_keywords(text, num_keywords=5):
+    """
+    Ekstrak keyword utama menggunakan spaCy dan filter kata-kata umum.
+    """
+    doc = nlp(text.lower())
+    words = [token.text for token in doc if token.is_alpha and not token.is_stop]
+    keyword_freq = Counter(words)
+    sorted_keywords = [word for word, freq in keyword_freq.most_common(num_keywords)]
+    # Filter kata yang terlalu umum
+    common_words = {"yang", "dan", "dengan", "adalah", "ini", "untuk", "seperti", "anda", "atau", "dalam"}
+    filtered_keywords = [word for word in sorted_keywords if word not in common_words]
+    return ", ".join(filtered_keywords)
+
+def clean_html(text):
+    """
+    Membersihkan teks dari HTML dan karakter aneh menggunakan BeautifulSoup.
+    """
+    return BeautifulSoup(text, "html.parser").get_text()
+
+def summarize_text(text, max_sentences=2):
+    """
+    Menggunakan Sumy (TextRank via LSA) untuk merangkum teks.
+    Jika hasilnya terlalu pendek, gunakan fallback 2 kalimat pertama.
+    """
+    text = clean_html(text)
+    parser = PlaintextParser.from_string(text, Tokenizer("english"))
+    summarizer = LsaSummarizer()
+    summary = summarizer(parser.document, max_sentences)
+    summary_text = " ".join([str(sentence) for sentence in summary]).strip()
+    if not summary_text or len(summary_text) < 50:
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        summary_text = " ".join(sentences[:2]).strip()
+    return summary_text
+
+def smart_truncate(text, max_length):
+    """
+    Memotong teks secara cerdas agar tidak terpotong di tengah kata atau kalimat.
+    Pertama mencoba memotong di batas kalimat, dan jika gagal, potong di batas kata.
+    """
+    text = re.sub(r'\s+', ' ', text).strip()
+    if len(text) <= max_length:
+        return text
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    truncated = ""
+    for sentence in sentences:
+        if len(truncated) + len(sentence) <= max_length:
+            truncated += sentence + " "
+        else:
+            break
+    truncated = truncated.strip()
+    if not truncated:
+        truncated = text[:max_length].rsplit(' ', 1)[0]
+    return truncated
+
+def generate_seo(title, description, custom_format=None):
+    """
+    Menghasilkan meta title dan meta description dengan:
+    - Ekstraksi entitas utama (misalnya, organisasi, lokasi, produk)
+    - Ekstraksi keyword menggunakan spaCy
+    - Pembentukan format default yang menarik dan natural
+    - Pemotongan cerdas untuk memastikan panjang optimal
+    """
+    description = clean_html(description)
+    doc = nlp(description)
+    
+    # Ekstrak entitas utama
+    entities = [ent.text for ent in doc.ents if ent.label_ in ["ORG", "GPE", "PRODUCT", "WORK_OF_ART"]]
+    # Gunakan urutan munculnya dan hindari duplikasi
+    entity_part = ", ".join(sorted(set(entities), key=entities.index)[:2]) if entities else ""
+    
+    # Ekstrak keyword utama
+    keywords = extract_keywords(description)
+    
+    # Hindari duplikasi: jika entity sudah ada dalam title, jangan ulangi
+    if entity_part and entity_part.lower() in title.lower():
+        entity_part = ""
+    
+    # Bangun meta title dengan format default atau kustom
+    if custom_format:
+        meta_title = custom_format.format(title=title, location=entity_part, keywords=keywords)
+    else:
+        meta_title = title
+        if entity_part:
+            meta_title += f" | {entity_part}"
+        if keywords:
+            meta_title += f" - {keywords}"
+    
+    meta_title = re.sub(r'\s+', ' ', meta_title).strip()
+    meta_title = smart_truncate(meta_title, 65)  # Idealnya sekitar 60-65 karakter
+    
+    # Bangun meta description dengan summarization dan truncation
+    meta_description = summarize_text(description)
+    meta_description = smart_truncate(meta_description, 160)  # Idealnya 150-160 karakter
+    
+    # Fallback tambahan: jika meta description terlalu pendek, gunakan 2 kalimat pertama
+    if not meta_description or len(meta_description) < 50:
+        sentences = re.split(r'(?<=[.!?])\s+', description)
+        meta_description = " ".join(sentences[:2]).strip()
+        meta_description = smart_truncate(meta_description, 160)
+    
+    return meta_title, meta_description

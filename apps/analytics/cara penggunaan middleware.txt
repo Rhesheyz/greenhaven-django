@@ -1,0 +1,50 @@
+# Di views.py atau tempat lain
+from .utils import ComplianceTracker
+
+# Log data access
+ComplianceTracker.log_access(
+    user_id=request.user.id,
+    ip_address=request.META.get('REMOTE_ADDR'),
+    data_category='personal',
+    data_description='User profile access',
+    purpose='Profile update',
+    action_type='access',
+    affected_users=[request.user.id],
+    sensitivity_level='medium'
+)
+
+# Generate privacy report
+report = ComplianceTracker.generate_privacy_report()
+
+
+===================================================================================================
+# Di views.py atau tempat lain
+from .utils import EventTracker, EventCategories, EventNames
+
+# Track single event
+EventTracker.track(
+    event_name=EventNames.VIEW_PROFILE,
+    category=EventCategories.PAGE_VIEW,
+    user=request.user,
+    session_id=request.session.session_key,
+    value={'page': 'profile', 'section': 'about'},
+    source='web'
+)
+
+# Track journey
+events = [
+    {
+        'name': EventNames.LOGIN,
+        'category': EventCategories.USER_ACTION,
+        'value': {'method': 'email'}
+    },
+    {
+        'name': EventNames.VIEW_PROFILE,
+        'category': EventCategories.PAGE_VIEW,
+        'value': {'section': 'dashboard'}
+    }
+]
+EventTracker.track_journey(events, user=request.user, session_id=request.session.session_key)
+
+# Get user journey
+journey = EventTracker.get_user_journey(request.session.session_key)

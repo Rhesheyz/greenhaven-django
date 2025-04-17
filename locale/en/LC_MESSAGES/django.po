@@ -1,0 +1,123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-11 21:39+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\lomba_ecotourism\settings.py:89
+msgid "Main Navigation"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:94
+msgid "Dashboard"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:101 .\lomba_ecotourism\settings.py:106
+#: .\templates\admin\index.html:22
+msgid "Destinations"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:111 .\templates\admin\index.html:31
+msgid "Flora"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:116 .\templates\admin\index.html:40
+msgid "Fauna"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:121
+msgid "Culinary"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:126 .\templates\admin\index.html:61
+msgid "Health"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:133
+msgid "Analytics"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:138
+msgid "Request Log"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:143
+msgid "Compliance Log"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:148
+msgid "Custom Event"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:153
+msgid "AI Analytics"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:158
+msgid "AI Feedback Analytics"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:165
+msgid "AI Management"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:170
+msgid "Chatbot Intents"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:175
+msgid "Chat Feedback"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:182
+msgid "Users & Authentication"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:187
+msgid "Users"
+msgstr ""
+
+#: .\lomba_ecotourism\settings.py:192
+msgid "Groups"
+msgstr ""
+
+#: .\templates\admin\index.html:6
+msgid "Django site admin"
+msgstr ""
+
+#: .\templates\admin\index.html:11
+msgid "Django administration"
+msgstr ""
+
+#: .\templates\admin\index.html:49
+msgid "Kuliner"
+msgstr ""
+
+#: .\templates\admin\index.html:70
+msgid "Total Request"
+msgstr ""
+
+#: .\templates\admin\index.html:79
+msgid "Ai Request"
+msgstr ""
+
+#: .\templates\admin\index.html:92
+msgid "Analytics Overview"
+msgstr ""
+
+#: .\templates\admin\index.html:102
+msgid "AI Analytics Overview"
+msgstr ""

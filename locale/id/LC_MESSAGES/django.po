@@ -1,0 +1,309 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-11 21:39+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Main Navigation"
+msgstr "Navigasi Utama"
+
+msgid "Destinations"
+msgstr "Destinasi"
+
+msgid "Flora"
+msgstr "Flora"
+
+msgid "Fauna"
+msgstr "Fauna"
+
+msgid "Culinary"
+msgstr "Kuliner"
+
+msgid "Health"
+msgstr "Kesehatan"
+
+msgid "Analytics"
+msgstr "Statistik"
+
+msgid "Request Log"
+msgstr "Log Aktivitas Permintaan"
+
+msgid "Compliance Log"
+msgstr "Log Aktivitas Sensitif"
+
+msgid "Custom Event"
+msgstr "Log Aktivitas Tertentu"
+
+msgid "AI Analytics"
+msgstr "Statistik AI"
+
+msgid "AI Feedback Analytics"
+msgstr "Statistik Umpan Balik AI"
+
+msgid "AI Management"
+msgstr "Manajemen AI"
+
+msgid "Chatbot Intents"
+msgstr "Respons Chatbot"
+
+msgid "Chat Feedback"
+msgstr "Umpan Balik Chat"
+
+msgid "Users & Authentication"
+msgstr "Pengguna & Autentikasi"
+
+msgid "Users"
+msgstr "Pengguna"
+
+msgid "Groups"
+msgstr "Level"
+
+msgid "Total Requests"
+msgstr "Total Permintaan"
+
+msgid "New Visitors"
+msgstr "Pengunjung Baru"
+
+msgid "Total Errors"
+msgstr "Total Kesalahan"
+
+msgid "Analytics Overview"
+msgstr "Statistik Ringkasan"
+
+msgid "AI Analytics Overview"
+msgstr "Statistik AI"
+
+msgid "Feedback Overview"
+msgstr "Statistik Umpan Balik"
+
+msgid "Performance"
+msgstr "Kinerja"
+
+msgid "Database Query Time"
+msgstr "Waktu Query Basis Data"
+
+msgid "High Response"
+msgstr "Respon Tinggi"
+
+msgid "Memory Usage"
+msgstr "Penggunaan Memori"
+
+msgid "Security"
+msgstr "Keamanan"
+
+msgid "Suspicious Requests"
+msgstr "Permintaan Mencurigakan"
+
+msgid "Auth Failures"
+msgstr "Kegagalan Autentikasi"
+
+msgid "Throttled"
+msgstr "Dibatasi"
+
+msgid "vs last week"
+msgstr "dibanding minggu lalu"
+
+msgid "Average Response Time"
+msgstr "Waktu Respon Rata-rata"
+
+msgid "threshold:"
+msgstr "ambang batas:"
+
+msgid "Success Rate"
+msgstr "Tingkat Keberhasilan"
+
+msgid "Target:"
+msgstr "Target:"
+
+msgid "Request Volume Trend"
+msgstr "Tren Volume Permintaan"
+
+msgid "Response Time Trend"
+msgstr "Tren Waktu Respon"
+
+msgid "Browser Distribution"
+msgstr "Jenis Browser"
+
+msgid "Device Distribution"
+msgstr "Jenis Perangkat"
+
+msgid "Top Endpoints"
+msgstr "Endpoint Teratas"
+
+msgid "OTHER"
+msgstr "LAINNYA"
+
+msgid "Critical"
+msgstr "Bahaya"
+
+msgid "Warning"
+msgstr "Peringatan"
+
+msgid "Healthy"
+msgstr "Aman"
+
+msgid "Requests"
+msgstr "Permintaan"
+
+msgid "Avg Response"
+msgstr "Rata-rata Respon"
+
+msgid "Error Rate"
+msgstr "Tingkat Kesalahan"
+
+msgid "High Risk Actions"
+msgstr "Tindakan Berisiko Tinggi"
+
+msgid "Cross-Border Transfers"
+msgstr "Pengunjung Luar"
+
+msgid "Expired Records"
+msgstr "Data Lama"
+
+msgid "Daily Compliance Activity"
+msgstr "Aktivitas Sensitif Harian"
+
+msgid "30-day trend analysis"
+msgstr "Statistik Tren 30 Hari"
+
+msgid "Action Distribution"
+msgstr "Distribusi Aktivitas"
+
+msgid "By type"
+msgstr "Berdasarkan Jenis"
+
+msgid "Data Categories"
+msgstr "Kategori Data"
+
+msgid "Distribution"
+msgstr "Distribusi"
+
+msgid "Risk Analysis"
+msgstr "Statistik Risiko"
+
+msgid "Sensitivity level"
+msgstr "Tingkat Sensitivitas"
+
+msgid "Event Activity (Last 30 Days)"
+msgstr "Aktivitas Kegiatan (30 Hari Terakhir)"
+
+msgid "Event Categories"
+msgstr "Kategori Kegiatan"
+
+msgid "User Types"
+msgstr "Jenis Pengguna"
+
+msgid "Top Events"
+msgstr "Kegiatan Teratas"
+
+msgid "Total Requests (30 days)"
+msgstr "Total Permintaan (30 Hari)"
+
+msgid "Average Success Rate"
+msgstr "Tingkat Keberhasilan Rata-rata"
+
+msgid "Daily Requests & Success Rate"
+msgstr "Permintaan Harian & Tingkat Keberhasilan"
+
+msgid "Response Time Trends"
+msgstr "Tren Waktu Respon"
+
+msgid "Total Feedback"
+msgstr "Total Umpan Balik"
+
+msgid "Positive Rate"
+msgstr "Tingkat Positif"
+
+msgid "Comment Rate"
+msgstr "Banyak Komentar"
+
+msgid "Daily Feedback Overview"
+msgstr "Statistik Umpan Balik Harian"
+
+msgid "Feedback Distribution"
+msgstr "Statistik Umpan Balik"
+
+msgid "Positive Feedback"
+msgstr "Umpan Balik Positif"
+
+msgid "Negative Feedback"
+msgstr "Umpan Balik Negatif"
+
+msgid "With Comments"
+msgstr "Dengan Komentar"
+
+msgid "Without Comments"
+msgstr "Tanpa Komentar"
+
+msgid "Number of Feedback"
+msgstr "Jumlah Umpan Balik"
+
+msgid "Successful Requests"
+msgstr "Permintaan Berhasil"
+
+msgid "Requests (24h)"
+msgstr "Permintaan (24 jam)"
+
+msgid "AI Analytics Stats"
+msgstr "Statistik AI Analytics"
+
+msgid "Analytics Stats"
+msgstr "Statistik Analytics"
+
+msgid "Daily Request Volume"
+msgstr "Volume Permintaan Harian"
+
+msgid "Average Response Time (ms)"
+msgstr "Waktu Respon Rata-rata (ms)"
+
+msgid "Events"
+msgstr "Kegiatan"
+
+msgid "Events Timeline"
+msgstr "Grafik Kegiatan"
+
+msgid "Event Count"
+msgstr "Jumlah Kegiatan"
+
+msgid "Compliance Actions"
+msgstr "Aktivitas Sensitif"
+
+msgid "Actions"
+msgstr "Aktivitas"
+
+msgid "Success Rate (%)"
+msgstr "Tingkat Keberhasilan (%)"
+
+msgid "Average Response Time (s)"
+msgstr "Waktu Respon Rata-rata (s)"
+
+msgid "Dont more than 255 characters"
+msgstr "Tidak lebih dari 255 karakter"
+
+msgid "Google Maps URL"
+msgstr "URL Google Maps"
+
+msgid "Image size max 10MB and max resolution 2000x2000px auto compress"
+msgstr "Ukuran gambar maksimal 10MB dan resolusi maksimal 2000x2000px auto kompres"
+
+msgid "Content Management"
+msgstr "Manajemen Konten"
+
+

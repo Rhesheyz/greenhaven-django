@@ -1,0 +1,344 @@
+/* Dashboard Layout */
+.compliance-dashboard {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+/* Summary Cards */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 1.75rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.3);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 8px rgba(0,0,0,.2);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+}
+
+.card:hover:before {
+    opacity: 1;
+}
+
+.card-content {
+    position: relative;
+    z-index: 1;
+}
+
+.card-content h3 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    transition: color 0.3s ease;
+}
+
+.card:hover .card-content h3 {
+    color: #1a73e8;
+}
+
+.card-content p {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0.25rem 0 0 0;
+    transition: color 0.3s ease;
+}
+
+.card:hover .card-content p {
+    color: #1a73e8;
+    transform: translateY(-1px);
+}
+
+.card-icon {
+    font-size: 1.5rem;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.card:hover .card-icon {
+    transform: scale(1.05);
+}
+
+/* Specific card hover effects */
+.high-risk:hover {
+    background:  rgba(255, 255, 255, 1);
+}
+
+.cross-border:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+.expired:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+/* Active state */
+.card.active {
+    border: 2px solid #1a73e8;
+    background: rgba(255, 255, 255, 1);
+}
+
+/* Tooltip hover styles */
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 12px;
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.95), rgba(142, 45, 226, 0.95));
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+[data-tooltip]:hover:before {
+    visibility: visible;
+    opacity: 1;
+    bottom: calc(100% + 5px);
+}
+
+/* Charts Section */
+.charts-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.charts-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.75rem;
+}
+
+.charts-row.primary {
+    grid-template-columns: 1fr;
+}
+
+.chart-container {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    height: 320px;
+    transition: all 0.3s ease;
+}
+
+.chart-container:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+}
+
+.chart-container.large {
+    height: 420px;
+}
+
+.chart-header {
+    margin-bottom: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.chart-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #101010;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.chart-container:hover .chart-header h3 {
+    color: #1a73e8;
+}
+
+.chart-subtitle {
+    font-size: 0.875rem;
+    color: #101010;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .charts-row {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+    
+    .chart-container {
+        padding: 2.5rem;
+    }
+
+    .chart-container canvas {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .charts-row {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+    
+    .chart-container {
+        padding: 2rem;
+        height: 300px;
+    }
+    
+    .chart-container.large {
+        height: 380px;
+    }
+
+    .chart-container canvas {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .compliance-dashboard {
+        padding: 1rem;
+    }
+    
+    .charts-row {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+    
+    .chart-container {
+        padding: 1.5rem;
+        height: 260px;
+        position: relative;
+    }
+    
+    .chart-container.large {
+        height: 300px;
+    }
+
+    .chart-container canvas {
+        padding: 1rem 2rem;
+        width: 100% !important;
+        height: 85% !important;
+        position: absolute !important;
+        bottom: 1rem !important;
+        left: 0 !important;
+        right: 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .charts-section {
+        gap: 1rem;
+    }
+    
+    .charts-row {
+        gap: 1rem;
+    }
+    
+    .chart-container {
+        padding: 1rem;
+        height: 220px;
+        border-radius: 8px;
+    }
+    
+    .chart-container.large {
+        height: 260px;
+    }
+    
+    .chart-header h3 {
+        font-size: 1rem;
+    }
+    
+    .chart-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .chart-container canvas {
+        padding: 0.75rem 1.5rem;
+        height: 75% !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .compliance-dashboard {
+        background: white;
+        box-shadow: none;
+    }
+    
+    .card {
+        break-inside: avoid;
+        box-shadow: none;
+    }
+    
+    .chart-container {
+        break-inside: avoid;
+        box-shadow: none;
+    }
+}
+
+/* Add stat-value styles */
+.stat-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+/* Tambahan untuk memastikan chart responsive */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
