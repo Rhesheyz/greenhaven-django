@@ -50,4 +50,4 @@ whitenoise==6.8.2
 gunicorn
 spacy
 nltk
-
+sumy
