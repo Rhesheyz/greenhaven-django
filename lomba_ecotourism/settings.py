@@ -124,8 +124,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': config('DB_NAME', default='property_db'),
         'USER': config('DB_USER', default='root'),
-        # 'PASSWORD': config('DB_PASSWORD', default='yourpassword'),
-        'PASSWORD': "",
+        'PASSWORD': config('DB_PASSWORD', default='yourpassword'),
         'HOST': config('DB_HOST', default='127.0.0.1'),
         'PORT': config('DB_PORT', default='3306'),
     }
