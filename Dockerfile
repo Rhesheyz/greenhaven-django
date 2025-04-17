@@ -15,4 +15,4 @@ RUN pip install -r requirements.txt
 RUN python manage.py collectstatic --noinput
 
 # Jalankan aplikasi
-CMD ["gunicorn", "myproject.wsgi:application", "--bind", "0.0.0.0:8999"]
+CMD ["gunicorn", "lomba_ecotourism.wsgi:application", "--bind", "0.0.0.0:8999"]
