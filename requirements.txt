@@ -48,3 +48,5 @@ urllib3==2.3.0
 user-agents==2.2.0
 whitenoise==6.8.2
 gunicorn
+spacy
+
